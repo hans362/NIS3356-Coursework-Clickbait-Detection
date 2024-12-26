@@ -1,0 +1,3 @@
+[submodule "wechat-corpus"]
+	path = wechat-corpus
+	url = git@github.com:Hastur0228/NIS3356.git
