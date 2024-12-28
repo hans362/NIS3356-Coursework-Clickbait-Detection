@@ -164,3 +164,5 @@ cython_debug/
 *.xlsx
 .DS_Store
 nis3356
+*.npy
+*.model
