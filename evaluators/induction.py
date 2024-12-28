@@ -36,3 +36,8 @@ class InductionEvaluator:
                 if similarity > 0.5:
                     match_cnt += similarity
         return min(match_cnt / len(title) * 100 * 2, 100)
+
+
+if __name__ == "__main__":
+    relevance_evaluator = InductionEvaluator("word2vec.model")
+    print(relevance_evaluator.calculate_index("title", "text"))

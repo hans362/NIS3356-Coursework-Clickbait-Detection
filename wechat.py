@@ -11,7 +11,7 @@ relevance_evaluator = RelevanceEvaluator("word2vec.model")
 plt.rcParams["font.sans-serif"] = ["Arial Unicode MS"]
 
 
-def load_articles(file):
+def load_articles(file, max_size=None):
     raw = json.loads(open(file, "r", encoding="utf-8").read())
     articles = []
     titles = set()
@@ -25,15 +25,15 @@ def load_articles(file):
         titles.add(article["title"])
         articles.append(article)
     articles = sorted(articles, key=lambda x: x["update_time"], reverse=True)
-    return articles
+    return articles[:max_size] if max_size is not None else articles
 
 
 def calculate_index_bulk(articles):
     for article in articles:
         title = article["title"]
         text = article["text"]
-        article["score"] = induction_evaluator.calculate_index(title) * 0.3
-        article["score"] += relevance_evaluator.calculate_index(title, text) * 0.7
+        article["score"] = induction_evaluator.calculate_index(title) * 0.4
+        article["score"] += relevance_evaluator.calculate_index(title, text) * 0.6
     return articles
 
 
@@ -47,8 +47,8 @@ def calculate_average_index(articles, start_date, end_date):
     return total_score / cnt if cnt > 0 else 0
 
 
-def evaluate_dataset(file):
-    articles = load_articles(file)
+def evaluate_dataset(file, max_size=None):
+    articles = load_articles(file, max_size)
     articles = calculate_index_bulk(articles)
 
     x = []
@@ -75,7 +75,7 @@ def evaluate_dataset(file):
         x.append(end_date)
         y.append(calculate_average_index(articles, start_date, end_date))
         start_date += timedelta(days=1)
-    plt.plot(x, y, label=os.path.basename(file))
+    plt.plot(x, y, label=os.path.basename(file).split(".")[0])
 
     articles = sorted(articles, key=lambda x: x["score"], reverse=True)
     print("===================================")
@@ -90,7 +90,7 @@ def evaluate_dataset(file):
         print(article["title"] + "\t" + str(article["score"]))
 
 
-corpus_dir = "./wechat-corpus/Databases"
+corpus_dir = "./weixin-corpus"
 for file in os.listdir(corpus_dir):
     if file.endswith(".json"):
         evaluate_dataset(os.path.join(corpus_dir, file))

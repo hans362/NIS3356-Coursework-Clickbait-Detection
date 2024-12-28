@@ -34,3 +34,8 @@ class RelevanceEvaluator:
                 if similarity > 0.5:
                     match_cnt += similarity
         return 100 - match_cnt / len(title) * 100
+
+
+if __name__ == "__main__":
+    relevance_evaluator = RelevanceEvaluator("word2vec.model")
+    print(relevance_evaluator.calculate_index("title", "text"))

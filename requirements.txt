@@ -1,0 +1,8 @@
+snownlp
+jieba
+openai
+requests
+synonyms
+matplotlib
+gensim
+flask
