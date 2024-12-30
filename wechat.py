@@ -78,16 +78,19 @@ def evaluate_dataset(file, max_size=None):
     plt.plot(x, y, label=os.path.basename(file).split(".")[0])
 
     articles = sorted(articles, key=lambda x: x["score"], reverse=True)
-    print("===================================")
-    print("Top 20 articles")
-    print("===================================")
-    for article in articles[:20]:
-        print(article["title"] + "\t" + str(article["score"]))
-    print("===================================")
-    print("Bottom 20 articles")
-    print("===================================")
-    for article in articles[-20:]:
-        print(article["title"] + "\t" + str(article["score"]))
+    with open(f"{os.path.basename(file)}.csv", "w") as f:
+        print("===================================")
+        print("Top 20 articles")
+        print("===================================")
+        for article in articles[:20]:
+            print(article["title"] + "\t" + str(article["score"]))
+            f.write(article["title"] + "," + str(article["score"]) + "\n")
+        print("===================================")
+        print("Bottom 20 articles")
+        print("===================================")
+        for article in articles[-20:]:
+            print(article["title"] + "\t" + str(article["score"]))
+            f.write(article["title"] + "," + str(article["score"]) + "\n")
 
 
 corpus_dir = "./wechat-corpus"
@@ -95,7 +98,8 @@ for file in os.listdir(corpus_dir):
     if file.endswith(".json"):
         evaluate_dataset(os.path.join(corpus_dir, file))
 
-plt.title("部分高校微信公众号平均标题党指数变化（120天滑动窗口）")
-plt.ylabel("标题党指数")
+plt.title("部分高校微信公众号平均综合标题党指数变化（120天滑动窗口）", fontsize=16)
+plt.ylabel("综合标题党指数")
 plt.legend()
+plt.subplots_adjust(left=0.04, right=0.99, top=0.96, bottom=0.04)
 plt.show()

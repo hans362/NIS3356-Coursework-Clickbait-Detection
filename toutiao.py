@@ -60,8 +60,8 @@ def evaluate_dataset(file, max_size=None):
         + str(calculate_average_index(articles))
     )
     print("===================================")
-    for i in range(300 - 20):
-        end = i + 20
+    for i in range(300 - 40):
+        end = i + 40
         x.append(end)
         y.append(calculate_average_index(articles[i:end]))
     plt.plot(x, y, label=os.path.basename(file).split(".")[0])
@@ -84,7 +84,8 @@ for file in os.listdir(corpus_dir):
     if file.endswith(".json"):
         evaluate_dataset(os.path.join(corpus_dir, file))
 
-plt.title("今日头条部分新闻媒体平均标题党指数变化（20篇滑动窗口）")
-plt.ylabel("标题党指数")
+plt.title("今日头条部分新闻媒体平均综合标题党指数变化（40篇滑动窗口）", fontsize=16)
+plt.ylabel("综合标题党指数")
 plt.legend()
+plt.subplots_adjust(left=0.04, right=0.99, top=0.96, bottom=0.04)
 plt.show()
