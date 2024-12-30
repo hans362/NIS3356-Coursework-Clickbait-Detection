@@ -39,5 +39,9 @@ class InductionEvaluator:
 
 
 if __name__ == "__main__":
-    relevance_evaluator = InductionEvaluator("word2vec.model")
-    print(relevance_evaluator.calculate_index("title", "text"))
+    relevance_evaluator = InductionEvaluator("keywords.txt", "word2vec.model")
+    print(
+        relevance_evaluator.calculate_index(
+            "“学生是我最好的作品，是我从教42年最好的见证人!”陈思和教授《从广场到岗位》新书发布"
+        )
+    )

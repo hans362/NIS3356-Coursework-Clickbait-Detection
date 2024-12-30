@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <link rel="stylesheet" href="/static/pico.min.css">
+  <title>标题党检测</title>
+</head>
+
+<body>
+  <header class="container">
+    <hgroup>
+      <h1>标题党检测</h1>
+    </hgroup>
+  </header>
+  <main class="container">
+    <article>
+      <input type="text" id="title" name="title" placeholder="输入标题">
+      <textarea id="text" name="text" placeholder="输入正文" rows="10"></textarea>
+    </article>
+    <article>
+      <table>
+        <thead>
+          <tr>
+            <th>诱导性维度指数</th>
+            <th>相关性维度指数</th>
+            <th>综合标题党指数</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td id="induction">0</td>
+            <td id="relevance">0</td>
+            <td id="total">0</td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+  </main>
+  <script src="/static/jquery-3.7.1.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $('#title').on('input', function() {
+        var title = $('#title').val();
+        var text = $('#text').val();
+        $.ajax({
+          url: '/api/induction',
+          type: 'POST',
+          data: {
+            title: title
+          },
+          success: function(data) {
+            $('#induction').text(data.score);
+            $('#total').text(data.score * 0.4 + parseFloat($('#relevance').text()) * 0.6);
+          }
+        });
+        $.ajax({
+          url: '/api/relevance',
+          type: 'POST',
+          data: {
+            title: title,
+            text: text
+          },
+          success: function(data) {
+            $('#relevance').text(data.score);
+            $('#total').text(parseFloat($('#induction').text()) * 0.4 + data.score * 0.6);
+          }
+        });
+      });
+      $('#text').on('input', function() {
+        var title = $('#title').val();
+        var text = $('#text').val();
+        $.ajax({
+          url: '/api/relevance',
+          type: 'POST',
+          data: {
+            title: title,
+            text: text
+          },
+          success: function(data) {
+            $('#relevance').text(data.score);
+            $('#total').text(parseFloat($('#induction').text()) * 0.4 + data.score * 0.6);
+          }
+        });
+      });
+    });
+  </script>
+</body>
+
+</html>
